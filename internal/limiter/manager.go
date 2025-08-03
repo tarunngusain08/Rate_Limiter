@@ -85,3 +85,14 @@ func (m *Manager) GetMetrics() *Metrics {
 
 	return aggregated
 }
+
+func (m *Manager) ReleaseWorker() {
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+
+	for _, limiter := range m.limiters {
+		if workerLimiter, ok := limiter.(*WorkerUtilLimiter); ok {
+			workerLimiter.ReleaseWorker()
+		}
+	}
+}
