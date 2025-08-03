@@ -40,6 +40,43 @@ spec:
           {{- end }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: APP_ENV
+              value: "production"
+            # Redis Configuration
+            - name: REDIS_ADDR
+              value: {{ .Values.rateLimiter.redis.addr | quote }}
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: redis-secrets
+                  key: password
+            - name: REDIS_DB
+              value: {{ .Values.rateLimiter.redis.db | quote }}
+            
+            # Rate Limiting Configuration
+            - name: RATE_LIMIT_DEFAULT_RPS
+              value: {{ .Values.rateLimiter.rateLimits.defaultRPS | quote }}
+            - name: RATE_LIMIT_DEFAULT_BURST
+              value: {{ .Values.rateLimiter.rateLimits.defaultBurst | quote }}
+            - name: RATE_LIMIT_DEFAULT_CONCURRENT
+              value: {{ .Values.rateLimiter.rateLimits.defaultConcurrent | quote }}
+            
+            # Fleet Usage Configuration
+            - name: FLEET_USAGE_CRITICAL_RESERVATION
+              value: {{ .Values.rateLimiter.fleetUsage.criticalReservation | quote }}
+            - name: FLEET_USAGE_MONITORING_WINDOW
+              value: {{ .Values.rateLimiter.fleetUsage.monitoringWindow | quote }}
+            
+            # Worker Threshold Configuration
+            - name: WORKER_THRESHOLD_EMERGENCY
+              value: {{ .Values.rateLimiter.worker.thresholds.emergency | quote }}
+            - name: WORKER_THRESHOLD_HIGH
+              value: {{ .Values.rateLimiter.worker.thresholds.high | quote }}
+            - name: WORKER_THRESHOLD_MEDIUM
+              value: {{ .Values.rateLimiter.worker.thresholds.medium | quote }}
+            - name: WORKER_THRESHOLD_LOW
+              value: {{ .Values.rateLimiter.worker.thresholds.low | quote }}
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
