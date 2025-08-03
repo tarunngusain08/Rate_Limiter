@@ -49,6 +49,11 @@ func main() {
 		c.JSON(200, gin.H{"status": "ok"})
 	})
 
+	r.GET("/test", func(c *gin.Context) {
+		manager.ReleaseWorker()
+		c.JSON(200, gin.H{"status": "done"})
+	})
+
 	if err := r.Run(":8080"); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}
