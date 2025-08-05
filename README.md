@@ -109,6 +109,12 @@ This demonstrates that the rate limiter is enforcing multiple layers of protecti
 ---
 
 ## Extending
+<img width="923" height="634" alt="Screenshot 2025-08-04 at 7 16 24 AM" src="https://github.com/user-attachments/assets/c517ce8a-3aa4-41eb-af67-81929f31965a" />
+<img width="672" height="776" alt="Screenshot 2025-08-04 at 7 16 09 AM" src="https://github.com/user-attachments/assets/9d570e78-d0d1-4e35-8684-2c53d3314b8d" />
+
+---
+
+## Extending
 
 - Add new limiter strategies by implementing the `RateLimiter` interface in `internal/interfaces`.
 - Add new storage backends in `internal/storage`.
