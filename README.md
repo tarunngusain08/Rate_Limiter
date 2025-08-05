@@ -82,9 +82,35 @@ All other endpoints are protected by the rate limiting middleware.
 
 ---
 
+## Summary of Rate Limiting Results
+
+When sending a burst of requests to the server (e.g., using `curl` in a loop), you may observe the following HTTP status codes:
+
+- **200**: Request allowed (within rate limits).
+- **503**: Service unavailable, typically due to worker or fleet utilization limits being exceeded.
+- **429**: Too many requests, standard rate limiting response when request rate or concurrency limits are hit.
+
+Example output for 50 rapid requests:
+
+```
+200
+200
+...
+503
+503
+...
+429
+429
+...
+```
+
+This demonstrates that the rate limiter is enforcing multiple layers of protection, including request rate, worker utilization, and fleet usage.
+
+---
+
 ## Extending
 
-- Add new limiter strategies by implementing the `RateLimiter` interface in `internal/limiter`.
+- Add new limiter strategies by implementing the `RateLimiter` interface in `internal/interfaces`.
 - Add new storage backends in `internal/storage`.
 
 ---
@@ -95,9 +121,3 @@ All other endpoints are protected by the rate limiting middleware.
 
 - Go 1.18+
 - Redis (for distributed mode)
-
-### Running Tests
-
-```bash
-go test ./...
-```
